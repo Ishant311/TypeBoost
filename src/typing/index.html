@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Practice - TypeBoost</title>
+    <link href="../output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-300 min-h-screen font-mono">
+    <nav class="border-b border-gray-700 py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="../index.html" class="text-xl md:text-2xl font-bold text-yellow-500">TypeBoost</a>
+            </div>
+
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="../index.html" class="text-lg px-3 py-2 rounded-lg hover:text-yellow-500 hover:bg-gray-800 transition-colors duration-200">Home</a>
+                <a href="./index.html" class="text-lg px-3 py-2 rounded-lg bg-yellow-500 text-gray-900 font-semibold transition-colors duration-200">Practice</a>
+                <a href="../history/index.html" class="text-lg px-3 py-2 rounded-lg hover:text-yellow-500 hover:bg-gray-800 transition-colors duration-200">History</a>
+                <a href="../profile/index.html" class="text-lg px-3 py-2 rounded-lg hover:text-yellow-500 hover:bg-gray-800 transition-colors duration-200">Profile</a>
+            </div>
+
+            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-800 transition-colors duration-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="md:hidden hidden border-t border-gray-700 mt-4 pt-4">
+            <div class="container mx-auto px-4 space-y-2">
+                <a href="../index.html" class="block text-lg px-3 py-2 rounded-lg hover:text-yellow-500 hover:bg-gray-800 transition-colors duration-200">Home</a>
+                <a href="./index.html" class="block text-lg px-3 py-2 rounded-lg bg-yellow-500 text-gray-900 font-semibold transition-colors duration-200">Practice</a>
+                <a href="../history/index.html" class="block text-lg px-3 py-2 rounded-lg hover:text-yellow-500 hover:bg-gray-800 transition-colors duration-200">History</a>
+                <a href="../profile/index.html" class="block text-lg px-3 py-2 rounded-lg hover:text-yellow-500 hover:bg-gray-800 transition-colors duration-200">Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-white mb-2">Sentence Typing Practice</h1>
+            <p class="text-gray-400">Type the sentence below as accurately and quickly as possible</p>
+        </div>
+
+        <div class="flex justify-center gap-4 mb-8">
+            <button id="easy-btn" class="px-4 py-2 rounded-lg border border-yellow-500 text-yellow-500 bg-gray-800 transition-all duration-200">
+                Easy
+            </button>
+            <button id="medium-btn" class="px-4 py-2 rounded-lg border border-gray-600 text-gray-400 hover:text-yellow-500 hover:border-yellow-500 transition-all duration-200">
+                Medium
+            </button>
+            <button id="hard-btn" class="px-4 py-2 rounded-lg border border-gray-600 text-gray-400 hover:text-yellow-500 hover:border-yellow-500 transition-all duration-200">
+                Hard
+            </button>
+            <button id="new-sentence-btn" class="px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-400 transition-colors duration-200 ml-4">
+                New Sentence
+            </button>
+        </div>
+
+        <div class="flex justify-center gap-8 mb-8 text-center">
+            <div>
+                <div class="text-2xl font-bold text-yellow-500" id="wpm-display">0</div>
+                <div class="text-sm text-gray-500 uppercase tracking-wider">WPM</div>
+            </div>
+            <div>
+                <div class="text-2xl font-bold text-yellow-500" id="accuracy-display">100</div>
+                <div class="text-sm text-gray-500 uppercase tracking-wider">Accuracy</div>
+            </div>
+            <div>
+                <div class="text-2xl font-bold text-yellow-500" id="errors-display">0</div>
+                <div class="text-sm text-gray-500 uppercase tracking-wider">Errors</div>
+            </div>
+        </div>
+
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-gray-800 rounded-lg p-8 mb-6 border border-gray-700">
+                <div id="sentence-display" class="text-xl md:text-2xl leading-relaxed text-left min-h-24 whitespace-normal break-words overflow-wrap-anywhere">
+                    <span class="text-gray-500">Click "New Sentence" to start practicing</span>
+                </div>
+            </div>
+
+            <div class="text-center mb-8 relative">
+                <input 
+                    type="text" 
+                    id="typing-input" 
+                    class="w-full bg-gray-800 border border-gray-600 rounded-lg p-4 text-xl text-white focus:border-yellow-500 focus:outline-none transition-colors duration-200" 
+                    placeholder="Start typing here..." 
+                    disabled
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                >
+            </div>
+
+            <div class="w-full bg-gray-700 rounded-full h-2 mb-8">
+                <div id="progress-bar" class="bg-yellow-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+
+            <div class="flex justify-center gap-4">
+                <button id="restart-btn" class="px-6 py-2 border border-gray-600 text-gray-300 rounded-lg hover:border-yellow-500 hover:text-yellow-500 transition-colors duration-200" disabled>
+                    Restart
+                </button>
+                <button id="skip-btn" class="px-6 py-2 border border-gray-600 text-gray-300 rounded-lg hover:border-yellow-500 hover:text-yellow-500 transition-colors duration-200" disabled>
+                    Skip Sentence
+                </button>
+            </div>
+        </div>
+
+        <div id="results-modal" class="fixed inset-0 bg-opacity-75 items-center justify-center hidden z-50 p-4">
+            <div class="bg-gray-800 p-6 md:p-8 rounded-lg max-w-sm md:max-w-md w-full border border-gray-700">
+                <h3 class="text-xl md:text-2xl font-bold text-yellow-500 mb-4 md:mb-6 text-center">Test Complete!</h3>
+                <div class="grid grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6">
+                    <div class="text-center">
+                        <div class="text-2xl md:text-3xl font-bold text-yellow-500" id="final-wpm">0</div>
+                        <div class="text-xs md:text-sm text-gray-500">WPM</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl md:text-3xl font-bold text-yellow-500" id="final-accuracy">100%</div>
+                        <div class="text-xs md:text-sm text-gray-500">Accuracy</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg md:text-xl text-gray-300" id="final-errors">0</div>
+                        <div class="text-xs md:text-sm text-gray-500">Errors</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg md:text-xl text-gray-300" id="final-time">0s</div>
+                        <div class="text-xs md:text-sm text-gray-500">Time</div>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button id="next-sentence-btn" class="px-4 md:px-6 py-2 bg-yellow-500 text-gray-900 text-sm md:text-base rounded-lg font-semibold hover:bg-yellow-400 transition-colors duration-200">
+                        Try Again
+                    </button>
+                    <button id="close-results" class="px-4 md:px-6 py-2 border border-gray-600 text-gray-300 text-sm md:text-base rounded-lg hover:border-yellow-500 hover:text-yellow-500 transition-colors duration-200">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="./script.js"></script>
+</body>
+</html>
+
