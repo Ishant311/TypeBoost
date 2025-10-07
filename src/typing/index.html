@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Practice - TypeBoost</title>
+    <link href="../output.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-gray-300 min-h-screen font-mono">
+    <!-- Navbar -->
+    <nav class="border-b border-gray-700 py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center">
+                <a href="../index.html" class="text-2xl font-bold text-yellow-500">TypeBoost</a>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex items-center space-x-6">
+                <a href="../index.html" class="text-lg hover:text-yellow-500 transition-colors duration-200">Home</a>
+                <a href="#" class="text-lg hover:text-yellow-500 transition-colors duration-200">History</a>
+                <div class="hidden sm:flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-yellow-500 text-gray-900 rounded-full flex items-center justify-center font-bold">
+                        U
+                    </div>
+                    <span class="text-lg text-gray-300">Guest User</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 max-w-5xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-white mb-2">Sentence Typing Practice</h1>
+            <p class="text-gray-400">Type the sentence below as accurately and quickly as possible</p>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex justify-center gap-4 mb-8">
+            <button id="easy-btn" class="px-4 py-2 rounded-lg border border-yellow-500 text-yellow-500 bg-gray-800 transition-all duration-200">
+                Easy
+            </button>
+            <button id="medium-btn" class="px-4 py-2 rounded-lg border border-gray-600 text-gray-400 hover:text-yellow-500 hover:border-yellow-500 transition-all duration-200">
+                Medium
+            </button>
+            <button id="hard-btn" class="px-4 py-2 rounded-lg border border-gray-600 text-gray-400 hover:text-yellow-500 hover:border-yellow-500 transition-all duration-200">
+                Hard
+            </button>
+            <button id="new-sentence-btn" class="px-4 py-2 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-400 transition-colors duration-200 ml-4">
+                New Sentence
+            </button>
+        </div>
+
+        <!-- Stats Display -->
+        <div class="flex justify-center gap-8 mb-8 text-center">
+            <div>
+                <div class="text-2xl font-bold text-yellow-500" id="wpm-display">0</div>
+                <div class="text-sm text-gray-500 uppercase tracking-wider">WPM</div>
+            </div>
+            <div>
+                <div class="text-2xl font-bold text-yellow-500" id="accuracy-display">100</div>
+                <div class="text-sm text-gray-500 uppercase tracking-wider">Accuracy</div>
+            </div>
+            <div>
+                <div class="text-2xl font-bold text-yellow-500" id="errors-display">0</div>
+                <div class="text-sm text-gray-500 uppercase tracking-wider">Errors</div>
+            </div>
+        </div>
+
+        <!-- Typing Area -->
+        <div class="max-w-4xl mx-auto">
+            <!-- Sentence Display -->
+            <div class="bg-gray-800 rounded-lg p-8 mb-6 border border-gray-700">
+                <div id="sentence-display" class="text-2xl leading-relaxed text-center min-h-24 flex items-center justify-center">
+                    <span class="text-gray-500">Click "New Sentence" to start practicing</span>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="text-center mb-8">
+                <input 
+                    type="text" 
+                    id="typing-input" 
+                    class="w-full bg-gray-800 border border-gray-600 rounded-lg p-4 text-xl text-white focus:border-yellow-500 focus:outline-none transition-colors duration-200" 
+                    placeholder="Start typing here..." 
+                    disabled
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                >
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-700 rounded-full h-2 mb-8">
+                <div id="progress-bar" class="bg-yellow-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-center gap-4">
+                <button id="restart-btn" class="px-6 py-2 border border-gray-600 text-gray-300 rounded-lg hover:border-yellow-500 hover:text-yellow-500 transition-colors duration-200" disabled>
+                    Restart
+                </button>
+                <button id="skip-btn" class="px-6 py-2 border border-gray-600 text-gray-300 rounded-lg hover:border-yellow-500 hover:text-yellow-500 transition-colors duration-200" disabled>
+                    Skip Sentence
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Modal -->
+        <div id="results-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-gray-800 p-8 rounded-lg max-w-md w-full mx-4 border border-gray-700">
+                <h3 class="text-2xl font-bold text-yellow-500 mb-6 text-center">Sentence Complete!</h3>
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-yellow-500" id="final-wpm">0</div>
+                        <div class="text-sm text-gray-500">WPM</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-yellow-500" id="final-accuracy">100%</div>
+                        <div class="text-sm text-gray-500">Accuracy</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xl text-gray-300" id="final-errors">0</div>
+                        <div class="text-sm text-gray-500">Errors</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xl text-gray-300" id="final-time">0s</div>
+                        <div class="text-sm text-gray-500">Time</div>
+                    </div>
+                </div>
+                <div class="flex gap-3 justify-center">
+                    <button id="next-sentence-btn" class="px-6 py-2 bg-yellow-500 text-gray-900 rounded-lg font-semibold hover:bg-yellow-400 transition-colors duration-200">
+                        Next Sentence
+                    </button>
+                    <button id="close-results" class="px-6 py-2 border border-gray-600 text-gray-300 rounded-lg hover:border-yellow-500 hover:text-yellow-500 transition-colors duration-200">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="./script.js"></script>
+</body>
+</html>
+
