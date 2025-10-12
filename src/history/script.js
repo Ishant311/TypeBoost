@@ -1,0 +1,190 @@
+let allResults = [];
+let filteredResults = [];
+let sortDirection = { wpm: 'desc', accuracy: 'desc' };
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    loadResults();
+    setupEventListeners();
+    displayResults();
+    updateStatistics();
+});
+
+function setupEventListeners() {
+    // Filter listeners
+    document.getElementById('difficulty-filter').addEventListener('change', applyFilters);
+    document.getElementById('time-filter').addEventListener('change', applyFilters);
+    
+    // Sort listeners
+    document.getElementById('sort-wpm').addEventListener('click', () => sortResults('wpm'));
+    document.getElementById('sort-accuracy').addEventListener('click', () => sortResults('accuracy'));
+    
+    // Clear history
+    document.getElementById('clear-history').addEventListener('click', clearHistory);
+}
+
+function loadResults() {
+    const results = localStorage.getItem('typingResults');
+    allResults = results ? JSON.parse(results) : [];
+    filteredResults = [...allResults];
+}
+
+function applyFilters() {
+    const difficultyFilter = document.getElementById('difficulty-filter').value;
+    const timeFilter = document.getElementById('time-filter').value;
+    
+    filteredResults = allResults.filter(result => {
+        const matchesDifficulty = !difficultyFilter || result.difficulty === difficultyFilter;
+        const matchesTime = !timeFilter || result.time.toString() === timeFilter;
+        
+        return matchesDifficulty && matchesTime;
+    });
+    
+    displayResults();
+    updateStatistics();
+}
+
+function sortResults(column) {
+    const direction = sortDirection[column];
+    
+    filteredResults.sort((a, b) => {
+        const valueA = column === 'wpm' ? a.wpm : a.accuracy;
+        const valueB = column === 'wpm' ? b.wpm : b.accuracy;
+        
+        if (direction === 'asc') {
+            return valueA - valueB;
+        } else {
+            return valueB - valueA;
+        }
+    });
+    
+    // Toggle sort direction
+    sortDirection[column] = direction === 'asc' ? 'desc' : 'asc';
+    
+    // Update sort icons
+    updateSortIcons(column, sortDirection[column]);
+    
+    displayResults();
+}
+
+function updateSortIcons(activeColumn, direction) {
+    // Reset all icons
+    document.querySelectorAll('.sort-icon').forEach(icon => {
+        icon.textContent = '↕';
+    });
+    
+    // Update active column icon
+    const activeIcon = document.querySelector(`#sort-${activeColumn} .sort-icon`);
+    if (activeIcon) {
+        activeIcon.textContent = direction === 'asc' ? '↑' : '↓';
+    }
+}
+
+function displayResults() {
+    const tbody = document.getElementById('history-table-body');
+    const emptyState = document.getElementById('empty-state');
+    const table = tbody.closest('.bg-gray-800');
+    
+    if (filteredResults.length === 0) {
+        table.style.display = 'none';
+        emptyState.classList.remove('hidden');
+        return;
+    }
+    
+    table.style.display = 'block';
+    emptyState.classList.add('hidden');
+    
+    tbody.innerHTML = filteredResults.map(result => {
+        const date = new Date(result.timestamp).toLocaleDateString();
+        const time = new Date(result.timestamp).toLocaleTimeString();
+        
+        return `
+            <tr class="hover:bg-gray-700 transition-colors duration-200">
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-white">${date}</div>
+                    <div class="text-xs text-gray-400">${time}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-lg font-bold text-yellow-500">${result.wpm}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-lg font-bold ${result.accuracy >= 95 ? 'text-green-400' : result.accuracy >= 85 ? 'text-yellow-500' : 'text-red-400'}">${result.accuracy}%</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-red-400">${result.errors}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-300">${result.time}s</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full ${getDifficultyColor(result.difficulty)}">
+                        ${result.difficulty}
+                    </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-300">${result.charsTyped}</div>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function getDifficultyColor(difficulty) {
+    switch (difficulty) {
+        case 'easy':
+            return 'bg-green-900 text-green-300';
+        case 'medium':
+            return 'bg-yellow-900 text-yellow-300';
+        case 'hard':
+            return 'bg-red-900 text-red-300';
+        default:
+            return 'bg-gray-700 text-gray-300';
+    }
+}
+
+function updateStatistics() {
+    const results = filteredResults.length > 0 ? filteredResults : allResults;
+    
+    if (results.length === 0) {
+        document.getElementById('total-tests').textContent = '0';
+        document.getElementById('avg-wpm').textContent = '0';
+        document.getElementById('best-wpm').textContent = '0';
+        document.getElementById('avg-accuracy').textContent = '0%';
+        return;
+    }
+    
+    const totalTests = results.length;
+    const avgWpm = Math.round(results.reduce((sum, result) => sum + result.wpm, 0) / totalTests);
+    const bestWpm = Math.max(...results.map(result => result.wpm));
+    const avgAccuracy = Math.round(results.reduce((sum, result) => sum + result.accuracy, 0) / totalTests);
+    
+    document.getElementById('total-tests').textContent = totalTests;
+    document.getElementById('avg-wpm').textContent = avgWpm;
+    document.getElementById('best-wpm').textContent = bestWpm;
+    document.getElementById('avg-accuracy').textContent = `${avgAccuracy}%`;
+}
+
+function clearHistory() {
+    if (confirm('Are you sure you want to clear all typing test history? This action cannot be undone.')) {
+        localStorage.removeItem('typingResults');
+        allResults = [];
+        filteredResults = [];
+        displayResults();
+        updateStatistics();
+        
+        // Show success message
+        showNotification('History cleared successfully!');
+    }
+}
+
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
