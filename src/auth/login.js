@@ -1,76 +1,126 @@
-(function() {
+document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('loginForm');
-    const email = document.getElementById('email');
-    const password = document.getElementById('password');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
     const emailError = document.getElementById('emailError');
     const passwordError = document.getElementById('passwordError');
     const submitMessage = document.getElementById('submitMessage');
 
-    function validateField(field, errorElement, validationFn, errorMessage) {
-        const isValid = validationFn(field.value);
-        if (!isValid) {
-            errorElement.textContent = errorMessage;
-            field.classList.add('border-red-500');
-            field.classList.remove('border-gray-600');
-        } else {
-            errorElement.textContent = '';
-            field.classList.remove('border-red-500');
-            field.classList.add('border-gray-600');
-        }
-        return isValid;
+    function clearErrors() {
+        emailError.textContent = '';
+        passwordError.textContent = '';
+        submitMessage.textContent = '';
+        emailInput.classList.remove('border-red-500');
+        passwordInput.classList.remove('border-red-500');
+        emailInput.classList.add('border-gray-600');
+        passwordInput.classList.add('border-gray-600');
+    }
+
+    function showError(input, errorElement, message) {
+        errorElement.textContent = message;
+        input.classList.add('border-red-500');
+        input.classList.remove('border-gray-600');
     }
 
     function validateEmail(email) {
-        return email && /^\S+@\S+\.\S+$/.test(email);
+        if (!email.trim()) {
+            return 'Email is required';
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return 'Please enter a valid email address';
+        }
+        return null;
     }
 
     function validatePassword(password) {
-        
-        return password && password.length > 8;
+        if (!password) {
+            return 'Password is required';
+        }
+        if (password.length < 8) {
+            return 'Password must be at least 8 characters long';
+        }
+        return null;
     }
 
-    function validateForm() {
-        const isEmailValid = validateField(
-            email, 
-            emailError, 
-            validateEmail, 
-            'Please enter a valid email address'
-        );
-        
-        const isPasswordValid = validateField(
-            password, 
-            passwordError, 
-            validatePassword, 
-            'Password must be at least 8 characters long'
-        );
-
-        return isEmailValid && isPasswordValid;
+    function findUserByCredentials(email, password) {
+        try {
+            const users = JSON.parse(localStorage.getItem('authDetails') || '[]');
+            return users.find(user =>
+                user.email.toLowerCase() === email.toLowerCase() &&
+                user.password === password
+            );
+        } catch (error) {
+            console.error('Error reading user data:', error);
+            return null;
+        }
     }
 
-    email.addEventListener('blur', () => validateField(email, emailError, validateEmail, 'Please enter a valid email address'));
-    password.addEventListener('blur', () => validateField(password, passwordError, validatePassword, 'Password must be at least 6 characters long'));
+    emailInput.addEventListener('input', function () {
+        if (emailError.textContent) {
+            clearErrors();
+        }
+    });
 
-    form.addEventListener('submit', function(e) {
+    passwordInput.addEventListener('input', function () {
+        if (passwordError.textContent) {
+            clearErrors();
+        }
+    });
+
+    form.addEventListener('submit', function (e) {
         e.preventDefault();
-        submitMessage.textContent = '';
-        
-        if (!validateForm()) {
+        clearErrors();
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+
+        let hasErrors = false;
+
+        const emailValidation = validateEmail(email);
+        if (emailValidation) {
+            showError(emailInput, emailError, emailValidation);
+            hasErrors = true;
+        }
+
+        const passwordValidation = validatePassword(password);
+        if (passwordValidation) {
+            showError(passwordInput, passwordError, passwordValidation);
+            hasErrors = true;
+        }
+
+        if (hasErrors) {
             return;
         }
 
-        submitMessage.textContent = 'Signing in...';
+        submitMessage.textContent = 'Checking credentials...';
         submitMessage.className = 'text-center text-sm text-yellow-500';
-        const userData = {
-            email: email.value,
-            name: email.value.split('@')[0]
-        };
 
-        localStorage.setItem('authDetails', JSON.stringify(userData));
-        localStorage.setItem('isLoggedIn', 'true');
-        
-        submitMessage.textContent = 'Login successful! Redirecting...';
-        submitMessage.className = 'text-center text-sm text-green-400';
-        
-        window.location.href = '../index.html';
+
+        const user = findUserByCredentials(email, password);
+
+        if (user) {
+            localStorage.setItem('typeboost_current_user', JSON.stringify(user));
+            localStorage.setItem('isLoggedIn', 'true');
+
+            submitMessage.textContent = `Welcome back, ${user.name}! Redirecting...`;
+            submitMessage.className = 'text-center text-sm text-green-400';
+
+            setTimeout(() => {
+                window.location.href = '../index.html';
+            }, 500);
+        } else {
+            const users = JSON.parse(localStorage.getItem('typeboost_users') || '[]');
+            const userExists = users.some(u => u.email.toLowerCase() === email.toLowerCase());
+
+            if (userExists) {
+                showError(passwordInput, passwordError, 'Incorrect password. Please try again.');
+            } else {
+                showError(emailInput, emailError, 'No account found with this email address.');
+            }
+
+            submitMessage.textContent = 'Login failed. Please check your credentials.';
+            submitMessage.className = 'text-center text-sm text-red-400';
+        }
     });
-})();
+});
