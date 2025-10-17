@@ -29,16 +29,16 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log(authDetails);
             const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
-            // if (!isLoggedIn || !authDetails.email) {
-            //     window.location.href = '../auth/login.html';
-            //     return;
-            // }
+            if (!isLoggedIn || !authDetails.email) {
+                window.location.href = '../auth/login.html';
+                return;
+            }
 
             currentUser = authDetails;
             updateDisplay();
         } catch (error) {
             console.error('Error loading user data:', error);
-            // window.location.href = '../auth/login.html';
+            window.location.href = '../auth/login.html';
         }
     }
 
