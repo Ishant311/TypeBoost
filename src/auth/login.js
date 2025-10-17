@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const user = findUserByCredentials(email, password);
 
         if (user) {
-            localStorage.setItem('typeboost_current_user', JSON.stringify(user));
+            localStorage.setItem('current-user', JSON.stringify(user));
             localStorage.setItem('isLoggedIn', 'true');
 
             submitMessage.textContent = `Welcome back, ${user.name}! Redirecting...`;

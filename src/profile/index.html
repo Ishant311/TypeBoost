@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - TypeBoost</title>
+    <link href="../output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-300 min-h-screen font-mono">
+    <nav class="border-b border-gray-700 py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="./index.html" class="text-xl md:text-2xl font-bold text-yellow-500">TypeBoost</a>
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="../index.html" class="text-lg px-3 py-2 rounded-lg hover:text-yellow-500 hover:bg-gray-800 transition-colors duration-200">Home</a>
+                <a href="../typing/index.html" class="text-lg px-3 py-2 rounded-lg hover:text-yellow-500 hover:bg-gray-800 transition-colors duration-200">Practice</a>
+                <a href="../history/index.html" class="text-lg px-3 py-2 rounded-lg hover:text-yellow-500 hover:bg-gray-800 transition-colors duration-200">History</a>
+                <a href="../profile/index.html" class="text-lg px-3 py-2 rounded-lg bg-yellow-500 text-gray-900 font-semibold transition-colors duration-200">Profile</a>
+                <a href="../auth/login.html" class="text-lg px-3 py-2 rounded-lg hover:text-yellow-500 hover:bg-gray-800 transition-colors duration-200" onclick="localStorage.setItem('isLoggedIn', 'false')">Logout</a>
+            </div>
+
+            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-gray-800 transition-colors duration-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden border-t border-gray-700 mt-4 pt-4">
+            <div class="container mx-auto px-4 space-y-2">
+                <a href="../index.html" class="block text-lg px-3 py-2 rounded-lg hover:text-yellow-500 hover:bg-gray-800 transition-colors duration-200">Home</a>
+                <a href="../typing/index.html" class="block text-lg px-3 py-2 rounded-lg hover:text-yellow-500 hover:bg-gray-800 transition-colors duration-200">Practice</a>
+                <a href="../history/index.html" class="block text-lg px-3 py-2 rounded-lg hover:text-yellow-500 hover:bg-gray-800 transition-colors duration-200">History</a>
+                <a href="../profile/index.html" class="block text-lg px-3 py-2 rounded-lg bg-yellow-500 text-gray-900 font-semibold transition-colors duration-200">Profile</a>
+                <a href="../auth/login.html" id="logoutBtn"  class="block text-lg px-3 py-2 rounded-lg hover:text-yellow-500 hover:bg-gray-800 transition-colors duration-200" onclick="localStorage.setItem('isLoggedIn', 'false')">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
+        <div class="bg-gray-800 rounded-lg shadow-lg p-6 md:p-8">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-2xl md:text-3xl font-bold text-white">My Profile</h1>
+                <button id="editToggle" class="bg-yellow-500 text-gray-900 px-4 py-2 rounded-lg font-medium hover:bg-yellow-600 transition-colors duration-200">
+                    Edit Profile
+                </button>
+            </div>
+
+            <div id="viewMode" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-400">Full Name</label>
+                        <div id="displayName" class="bg-gray-700 p-3 rounded-lg text-white"></div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-400">Email Address</label>
+                        <div id="displayEmail" class="bg-gray-700 p-3 rounded-lg text-white"></div>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-400">Password</label>
+                    <div class="bg-gray-700 p-3 rounded-lg text-white">••••••••••••</div>
+                </div>
+            </div>
+
+            <div id="editMode" class="space-y-6 hidden">
+                <form id="profileForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label for="editName" class="block text-sm font-medium text-gray-300">Full Name</label>
+                            <input 
+                                type="text" 
+                                id="editName" 
+                                name="name"
+                                class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
+                                placeholder="Enter your full name"
+                                required
+                            />
+                            <div id="nameError" class="text-red-400 text-sm"></div>
+                        </div>
+                        <div class="space-y-2">
+                            <label for="editEmail" class="block text-sm font-medium text-gray-300">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="editEmail" 
+                                name="email"
+                                class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
+                                placeholder="Enter your email"
+                                required
+                            />
+                            <div id="emailError" class="text-red-400 text-sm"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="space-y-2">
+                            <label for="currentPassword" class="block text-sm font-medium text-gray-300">Current Password</label>
+                            <input 
+                                type="password" 
+                                id="currentPassword" 
+                                name="currentPassword"
+                                class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
+                                placeholder="Enter current password"
+                            />
+                            <div id="currentPasswordError" class="text-red-400 text-sm"></div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label for="newPassword" class="block text-sm font-medium text-gray-300">New Password (Optional)</label>
+                            <input 
+                                type="password" 
+                                id="newPassword" 
+                                name="newPassword"
+                                class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all duration-200"
+                                placeholder="Enter new password (leave blank to keep current)"
+                            />
+                            <div id="newPasswordError" class="text-red-400 text-sm"></div>
+                            <div class="text-xs text-gray-400">
+                                Leave blank to keep your current password
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button 
+                            type="submit" 
+                            class="flex-1 bg-yellow-500 text-gray-900 px-6 py-3 rounded-lg font-medium hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200"
+                        >
+                            Save Changes
+                        </button>
+                        <button 
+                            type="button" 
+                            id="cancelEdit"
+                            class="flex-1 bg-gray-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+
+                <div id="updateMessage" class="text-center text-sm" aria-live="polite"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

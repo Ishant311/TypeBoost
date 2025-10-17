@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
-            const users = JSON.parse(localStorage.getItem('typeboost_users') || '[]');
+            const users = JSON.parse(localStorage.getItem('authDetails') || '[]');
             
             const newUser = {
                 name: name,
@@ -150,6 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
             users.push(newUser);
             localStorage.setItem('authDetails', JSON.stringify(users));
             localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('current-user', JSON.stringify(newUser));
 
             submitMessage.textContent = 'Account created successfully! Redirecting...';
             submitMessage.className = 'text-center text-sm text-green-400';
