@@ -204,7 +204,7 @@ function handleFormSubmit(e) {
 function handleLogout() {
     localStorage.removeItem('authDetails');
     localStorage.removeItem('isLoggedIn');
-    // window.location.href = '../auth/login.html';
+    window.location.href = '../auth/login.html';
 }
 
 editToggle.addEventListener('click', toggleEditMode);

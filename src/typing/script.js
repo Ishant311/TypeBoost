@@ -54,21 +54,8 @@ function updateUserInfo() {
             const user = JSON.parse(authDetails);
             const email = user.email || 'guest@example.com';
             const name = email.split('@')[0];
-            const initials = name.charAt(0).toUpperCase();
 
-            const userAvatar = document.getElementById('user-avatar');
-            const userName = document.getElementById('user-name');
-            if (userAvatar && userName) {
-                userAvatar.textContent = initials;
-                userName.textContent = name;
-            }
-
-            const mobileUserAvatar = document.getElementById('mobile-user-avatar');
-            const mobileUserName = document.getElementById('mobile-user-name');
-            if (mobileUserAvatar && mobileUserName) {
-                mobileUserAvatar.textContent = initials;
-                mobileUserName.textContent = name;
-            }
+            
         }
     } catch (e) {
         console.log('No user data found in localStorage');
@@ -142,9 +129,9 @@ function setupEventListeners() {
 
 function setDifficulty(difficulty) {
     currentDifficulty = difficulty;
-    document.querySelectorAll('[id$="-btn"]:not(#new-sentence-btn):not(#restart-btn):not(#skip-btn)').forEach(btn => {
-        btn.className = 'px-4 py-2 rounded-lg border border-gray-600 text-gray-400 hover:text-yellow-500 hover:border-yellow-500 transition-all duration-200';
-    });
+    document.getElementById('easy-btn').className = 'px-4 py-2 rounded-lg border border-gray-600 text-gray-400 hover:text-yellow-500 hover:border-yellow-500 transition-all duration-200';
+    document.getElementById('medium-btn').className = 'px-4 py-2 rounded-lg border border-gray-600 text-gray-400 hover:text-yellow-500 hover:border-yellow-500 transition-all duration-200';
+    document.getElementById('hard-btn').className = 'px-4 py-2 rounded-lg border border-gray-600 text-gray-400 hover:text-yellow-500 hover:border-yellow-500 transition-all duration-200';
     document.getElementById(`${difficulty}-btn`).className = 'px-4 py-2 rounded-lg border border-yellow-500 text-yellow-500 bg-gray-800 transition-all duration-200';
 }
 
