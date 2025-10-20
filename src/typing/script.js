@@ -107,7 +107,6 @@ function setupEventListeners() {
     document.getElementById('hard-btn').addEventListener('click', () => setDifficulty('hard'));
     document.getElementById('new-sentence-btn').addEventListener('click', generateNewSentence);
     document.getElementById('restart-btn').addEventListener('click', restartTest);
-    document.getElementById('skip-btn').addEventListener('click', generateNewSentence);
     const nextBtn = document.getElementById('next-sentence-btn');
     const closeBtn = document.getElementById('close-results');
     if (nextBtn) {
