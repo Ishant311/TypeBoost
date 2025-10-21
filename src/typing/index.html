@@ -18,7 +18,7 @@
             <!-- Navigation -->
             <div class="flex items-center space-x-6">
                 <a href="../index.html" class="text-lg hover:text-yellow-500 transition-colors duration-200">Home</a>
-                <a href="#" class="text-lg hover:text-yellow-500 transition-colors duration-200">History</a>
+                <a href="../history/index.html" class="text-lg hover:text-yellow-500 transition-colors duration-200">History</a>
                 <div class="hidden sm:flex items-center space-x-2">
                     <div class="w-8 h-8 bg-yellow-500 text-gray-900 rounded-full flex items-center justify-center font-bold">
                         U
@@ -110,32 +110,32 @@
         </div>
 
         <!-- Results Modal -->
-        <div id="results-modal" class="fixed inset-0 bg-black bg-opacity-75 items-center justify-center hidden z-50">
-            <div class="bg-gray-800 p-8 rounded-lg max-w-md w-full mx-4 border border-gray-700">
-                <h3 class="text-2xl font-bold text-yellow-500 mb-6 text-center">Test Complete!</h3>
-                <div class="grid grid-cols-2 gap-4 mb-6">
+        <div id="results-modal" class="fixed inset-0 bg-black bg-opacity-75  items-center justify-center hidden z-50 p-4">
+            <div class="bg-gray-800 p-6 md:p-8 rounded-lg max-w-sm md:max-w-md w-full border border-gray-700">
+                <h3 class="text-xl md:text-2xl font-bold text-yellow-500 mb-4 md:mb-6 text-center">Test Complete!</h3>
+                <div class="grid grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6">
                     <div class="text-center">
-                        <div class="text-3xl font-bold text-yellow-500" id="final-wpm">0</div>
-                        <div class="text-sm text-gray-500">WPM</div>
+                        <div class="text-2xl md:text-3xl font-bold text-yellow-500" id="final-wpm">0</div>
+                        <div class="text-xs md:text-sm text-gray-500">WPM</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-3xl font-bold text-yellow-500" id="final-accuracy">100%</div>
-                        <div class="text-sm text-gray-500">Accuracy</div>
+                        <div class="text-2xl md:text-3xl font-bold text-yellow-500" id="final-accuracy">100%</div>
+                        <div class="text-xs md:text-sm text-gray-500">Accuracy</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-xl text-gray-300" id="final-errors">0</div>
-                        <div class="text-sm text-gray-500">Errors</div>
+                        <div class="text-lg md:text-xl text-gray-300" id="final-errors">0</div>
+                        <div class="text-xs md:text-sm text-gray-500">Errors</div>
                     </div>
                     <div class="text-center">
-                        <div class="text-xl text-gray-300" id="final-time">0s</div>
-                        <div class="text-sm text-gray-500">Time</div>
+                        <div class="text-lg md:text-xl text-gray-300" id="final-time">0s</div>
+                        <div class="text-xs md:text-sm text-gray-500">Time</div>
                     </div>
                 </div>
-                <div class="flex gap-3 justify-center">
-                    <button id="next-sentence-btn" class="px-6 py-2 bg-yellow-500 text-gray-900 rounded-lg font-semibold hover:bg-yellow-400 transition-colors duration-200">
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button id="next-sentence-btn" class="px-4 md:px-6 py-2 bg-yellow-500 text-gray-900 text-sm md:text-base rounded-lg font-semibold hover:bg-yellow-400 transition-colors duration-200">
                         Try Again
                     </button>
-                    <button id="close-results" class="px-6 py-2 border border-gray-600 text-gray-300 rounded-lg hover:border-yellow-500 hover:text-yellow-500 transition-colors duration-200">
+                    <button id="close-results" class="px-4 md:px-6 py-2 border border-gray-600 text-gray-300 text-sm md:text-base rounded-lg hover:border-yellow-500 hover:text-yellow-500 transition-colors duration-200">
                         Close
                     </button>
                 </div>

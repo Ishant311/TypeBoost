@@ -82,11 +82,13 @@ function updateSortIcons(activeColumn, direction) {
 
 function displayResults() {
     const tbody = document.getElementById('history-table-body');
+    const mobileCards = document.getElementById('mobile-cards');
     const emptyState = document.getElementById('empty-state');
     const table = tbody.closest('.bg-gray-800');
     
     if (filteredResults.length === 0) {
         table.style.display = 'none';
+        mobileCards.innerHTML = '';
         emptyState.classList.remove('hidden');
         return;
     }
@@ -94,37 +96,84 @@ function displayResults() {
     table.style.display = 'block';
     emptyState.classList.add('hidden');
     
+    // Desktop table view
     tbody.innerHTML = filteredResults.map(result => {
         const date = new Date(result.timestamp).toLocaleDateString();
         const time = new Date(result.timestamp).toLocaleTimeString();
         
         return `
             <tr class="hover:bg-gray-700 transition-colors duration-200">
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
                     <div class="text-sm text-white">${date}</div>
                     <div class="text-xs text-gray-400">${time}</div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
                     <div class="text-lg font-bold text-yellow-500">${result.wpm}</div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
                     <div class="text-lg font-bold ${result.accuracy >= 95 ? 'text-green-400' : result.accuracy >= 85 ? 'text-yellow-500' : 'text-red-400'}">${result.accuracy}%</div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
                     <div class="text-sm text-red-400">${result.errors}</div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
                     <div class="text-sm text-gray-300">${result.time}s</div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
                     <span class="px-2 py-1 text-xs font-semibold rounded-full ${getDifficultyColor(result.difficulty)}">
                         ${result.difficulty}
                     </span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
                     <div class="text-sm text-gray-300">${result.charsTyped}</div>
                 </td>
             </tr>
+        `;
+    }).join('');
+    
+    // Mobile card view
+    mobileCards.innerHTML = filteredResults.map(result => {
+        const date = new Date(result.timestamp).toLocaleDateString();
+        const time = new Date(result.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        
+        return `
+            <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <div class="text-sm text-white font-medium">${date}</div>
+                        <div class="text-xs text-gray-400">${time}</div>
+                    </div>
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full ${getDifficultyColor(result.difficulty)}">
+                        ${result.difficulty}
+                    </span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-3">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-yellow-500">${result.wpm}</div>
+                        <div class="text-xs text-gray-500">WPM</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold ${result.accuracy >= 95 ? 'text-green-400' : result.accuracy >= 85 ? 'text-yellow-500' : 'text-red-400'}">${result.accuracy}%</div>
+                        <div class="text-xs text-gray-500">Accuracy</div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-2 text-center">
+                    <div>
+                        <div class="text-sm text-red-400">${result.errors}</div>
+                        <div class="text-xs text-gray-500">Errors</div>
+                    </div>
+                    <div>
+                        <div class="text-sm text-gray-300">${result.time}s</div>
+                        <div class="text-xs text-gray-500">Time</div>
+                    </div>
+                    <div>
+                        <div class="text-sm text-gray-300">${result.charsTyped}</div>
+                        <div class="text-xs text-gray-500">Chars</div>
+                    </div>
+                </div>
+            </div>
         `;
     }).join('');
 }
