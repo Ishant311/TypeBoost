@@ -11,11 +11,17 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function setupEventListeners() {
-    // Filter listeners
-    document.getElementById('difficulty-filter').addEventListener('change', applyFilters);
-    document.getElementById('time-filter').addEventListener('change', applyFilters);
+    // Filter listeners - apply filters on every change
+    const difficultyFilter = document.getElementById('difficulty-filter');
+    const timeFilter = document.getElementById('time-filter');
     
-    // Sort listeners
+    difficultyFilter.addEventListener('change', applyFilters);
+    difficultyFilter.addEventListener('input', applyFilters);
+    
+    timeFilter.addEventListener('change', applyFilters);
+    timeFilter.addEventListener('input', applyFilters);
+    
+    // Sort listeners - fix the typo here
     document.getElementById('sort-wpm').addEventListener('click', () => sortResults('wpm'));
     document.getElementById('sort-accuracy').addEventListener('click', () => sortResults('accuracy'));
     
@@ -84,47 +90,49 @@ function displayResults() {
     const tbody = document.getElementById('history-table-body');
     const mobileCards = document.getElementById('mobile-cards');
     const emptyState = document.getElementById('empty-state');
-    const table = tbody.closest('.bg-gray-800');
+    const table = tbody.closest('div');
+    
+    console.log('Displaying results:', filteredResults.length); // Debug log
     
     if (filteredResults.length === 0) {
-        table.style.display = 'none';
+        if (table) table.style.display = 'none';
         mobileCards.innerHTML = '';
         emptyState.classList.remove('hidden');
         return;
     }
     
-    table.style.display = 'block';
+    if (table) table.style.display = 'block';
     emptyState.classList.add('hidden');
     
     // Desktop table view
     tbody.innerHTML = filteredResults.map(result => {
         const date = new Date(result.timestamp).toLocaleDateString();
-        const time = new Date(result.timestamp).toLocaleTimeString();
+        const time = new Date(result.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         
         return `
             <tr class="hover:bg-gray-700 transition-colors duration-200">
-                <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
+                <td class="px-3 py-4 text-left">
                     <div class="text-sm text-white">${date}</div>
                     <div class="text-xs text-gray-400">${time}</div>
                 </td>
-                <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
+                <td class="px-3 py-4 text-center">
                     <div class="text-lg font-bold text-yellow-500">${result.wpm}</div>
                 </td>
-                <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
+                <td class="px-3 py-4 text-center">
                     <div class="text-lg font-bold ${result.accuracy >= 95 ? 'text-green-400' : result.accuracy >= 85 ? 'text-yellow-500' : 'text-red-400'}">${result.accuracy}%</div>
                 </td>
-                <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
+                <td class="px-3 py-4 text-center">
                     <div class="text-sm text-red-400">${result.errors}</div>
                 </td>
-                <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
+                <td class="px-3 py-4 text-center">
                     <div class="text-sm text-gray-300">${result.time}s</div>
                 </td>
-                <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
-                    <span class="px-2 py-1 text-xs font-semibold rounded-full ${getDifficultyColor(result.difficulty)}">
+                <td class="px-3 py-4 text-center">
+                    <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full ${getDifficultyColor(result.difficulty)}">
                         ${result.difficulty}
                     </span>
                 </td>
-                <td class="px-4 lg:px-6 py-4 whitespace-nowrap">
+                <td class="px-3 py-4 text-center">
                     <div class="text-sm text-gray-300">${result.charsTyped}</div>
                 </td>
             </tr>
@@ -137,7 +145,7 @@ function displayResults() {
         const time = new Date(result.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         
         return `
-            <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
+            <div class="bg-gray-800 rounded-lg p-4 border border-gray-700 hover:border-gray-600 transition-colors duration-200">
                 <div class="flex justify-between items-start mb-3">
                     <div>
                         <div class="text-sm text-white font-medium">${date}</div>
@@ -149,28 +157,28 @@ function displayResults() {
                 </div>
                 
                 <div class="grid grid-cols-2 gap-4 mb-3">
-                    <div class="text-center">
+                    <div class="text-center bg-gray-700 rounded-lg p-3">
                         <div class="text-2xl font-bold text-yellow-500">${result.wpm}</div>
-                        <div class="text-xs text-gray-500">WPM</div>
+                        <div class="text-xs text-gray-400">WPM</div>
                     </div>
-                    <div class="text-center">
+                    <div class="text-center bg-gray-700 rounded-lg p-3">
                         <div class="text-2xl font-bold ${result.accuracy >= 95 ? 'text-green-400' : result.accuracy >= 85 ? 'text-yellow-500' : 'text-red-400'}">${result.accuracy}%</div>
-                        <div class="text-xs text-gray-500">Accuracy</div>
+                        <div class="text-xs text-gray-400">Accuracy</div>
                     </div>
                 </div>
                 
                 <div class="grid grid-cols-3 gap-2 text-center">
-                    <div>
-                        <div class="text-sm text-red-400">${result.errors}</div>
-                        <div class="text-xs text-gray-500">Errors</div>
+                    <div class="bg-gray-700 rounded-lg p-2">
+                        <div class="text-sm font-medium text-red-400">${result.errors}</div>
+                        <div class="text-xs text-gray-400">Errors</div>
                     </div>
-                    <div>
-                        <div class="text-sm text-gray-300">${result.time}s</div>
-                        <div class="text-xs text-gray-500">Time</div>
+                    <div class="bg-gray-700 rounded-lg p-2">
+                        <div class="text-sm font-medium text-gray-300">${result.time}s</div>
+                        <div class="text-xs text-gray-400">Time</div>
                     </div>
-                    <div>
-                        <div class="text-sm text-gray-300">${result.charsTyped}</div>
-                        <div class="text-xs text-gray-500">Chars</div>
+                    <div class="bg-gray-700 rounded-lg p-2">
+                        <div class="text-sm font-medium text-gray-300">${result.charsTyped}</div>
+                        <div class="text-xs text-gray-400">Chars</div>
                     </div>
                 </div>
             </div>

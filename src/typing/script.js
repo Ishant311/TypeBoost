@@ -73,7 +73,7 @@ function createTimerDisplay() {
     // Create timer display positioned at bottom left of input
     const timerDiv = document.createElement('div');
     timerDiv.id = 'timer-display';
-    timerDiv.className = 'absolute bottom-2 left-2 text-lg font-bold text-yellow-500 bg-gray-800 px-2 py-1 rounded border border-gray-600 z-10';
+    timerDiv.className = 'absolute bottom-2 right-2 text-lg font-bold text-yellow-500 bg-gray-800 px-2 py-1 rounded border border-gray-600 z-10';
     timerDiv.textContent = `${timeRemaining}s`;
     
     // Position it relative to the input container
